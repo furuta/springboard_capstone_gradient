@@ -1,6 +1,5 @@
 import tensorflow as tf
 from tensorflow import keras
-from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import train_test_split
 import numpy as np
 import os
@@ -66,7 +65,8 @@ batch_size = int(os.getenv("BATCH_SIZE", 500))
 model.compile(loss=['mean_squared_error'], metrics=[
               r2_keras], optimizer=tf.train.AdamOptimizer())
 
-estimator = KerasRegressor(build_fn=model, batch_size=batch_size, verbose=0)
+estimator = keras.wrappers.scikit_learn.KerasRegressor(
+    build_fn=model, batch_size=batch_size, verbose=0)
 estimator.fit(X_train, y_train, epochs=epochs, validation_split=0.2)
 
 # Check accuracy
