@@ -1,7 +1,7 @@
-from keras.wrappers.scikit_learn import KerasRegressor
-from sklearn.model_selection import train_test_split
 import tensorflow as tf
 from tensorflow import keras
+from keras.wrappers.scikit_learn import KerasRegressor
+from sklearn.model_selection import train_test_split
 import numpy as np
 import os
 import argparse
