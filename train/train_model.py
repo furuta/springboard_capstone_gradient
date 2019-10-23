@@ -10,7 +10,7 @@ import dask.dataframe as dd
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
-from keras import backend as K
+from tensorflow.keras import backend as K
 # from keras.layers import Dropout
 # from keras.optimizers import Adam
 # from keras.callbacks import EarlyStopping
