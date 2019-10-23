@@ -8,7 +8,7 @@ import pickle
 import dask
 import dask.dataframe as dd
 
-tf.logging.set_verbosity(tf.logging.ERROR)
+# tf.logging.set_verbosity(tf.logging.ERROR)
 
 # Parse input parameters
 parser = argparse.ArgumentParser(description='Airbnb Listing Keras Model')
