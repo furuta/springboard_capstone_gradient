@@ -7,6 +7,13 @@ import argparse
 import pickle
 import dask
 import dask.dataframe as dd
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
+from keras import backend as K
+# from keras.layers import Dropout
+# from keras.optimizers import Adam
+# from keras.callbacks import EarlyStopping
 
 # tf.logging.set_verbosity(tf.logging.ERROR)
 
@@ -26,35 +33,34 @@ INPUT_FILE = args.input
 
 
 def r2_keras(y_true, y_pred):
-    SS_res = keras.sum(keras.square(y_true - y_pred))
-    SS_tot = keras.sum(keras.square(y_true - keras.mean(y_true)))
-    return (1 - SS_res/(SS_tot + keras.epsilon()))
+    SS_res = K.sum(K.square(y_true - y_pred))
+    SS_tot = K.sum(K.square(y_true - K.mean(y_true)))
+    return (1 - SS_res/(SS_tot + K.epsilon()))
 
 
 # Load data
 with open(INPUT_FILE, 'rb') as f:
     ddf_airbnb = pickle.load(f)
+print(ddf_airbnb.head())
 
-ddf_intermediate = ddf_intermediate.dropna()
-ddf_intermediate['price_amount_log'] = np.log(ddf_intermediate['price_amount'])
-del ddf_intermediate['price_amount']
+ddf_airbnb = ddf_airbnb.dropna()
+ddf_airbnb['price_amount_log'] = np.log(ddf_airbnb['price_amount'])
+del ddf_airbnb['price_amount']
 
-y = ddf_intermediate['price_amount_log']
-X = ddf_intermediate.drop('price_amount_log', axis=1)
+y = ddf_airbnb['price_amount_log']
+X = ddf_airbnb.drop('price_amount_log', axis=1)
 X_train, X_val, y_train, y_val = train_test_split(
     X, y, train_size=0.8, test_size=0.2, random_state=1)
 
 
 # Build model
-model = keras.Sequential([
-    keras.layers.Dense(
-        91, input_dim=91, kernel_initializer='normal', activation='relu'),
-    keras.layers.Dense(50, kernel_initializer='normal', activation='relu'),
-    keras.layers.Dense(30, kernel_initializer='normal', activation='relu'),
-    keras.layers.Dense(30, kernel_initializer='normal', activation='relu'),
-    keras.layers.Dense(30, kernel_initializer='normal', activation='relu'),
-    keras.layers.Dense(1, kernel_initializer='normal')
-])
+model = Sequential()
+model.add(Dense(91, input_dim=91, kernel_initializer='normal', activation='relu'))
+model.add(Dense(50, kernel_initializer='normal', activation='relu'))
+model.add(Dense(30, kernel_initializer='normal', activation='relu'))
+model.add(Dense(30, kernel_initializer='normal', activation='relu'))
+model.add(Dense(30, kernel_initializer='normal', activation='relu'))
+model.add(Dense(1, kernel_initializer='normal'))
 model.summary()
 
 # Read the EPOCH value from environment variable
@@ -63,12 +69,13 @@ batch_size = int(os.getenv("BATCH_SIZE", 500))
 
 #Compile and fit
 model.compile(loss=['mean_squared_error'], metrics=[
-              r2_keras], optimizer=tf.train.AdamOptimizer())
+              r2_keras], optimizer='Adam')
 
-estimator = keras.wrappers.scikit_learn.KerasRegressor(
-    build_fn=model, batch_size=batch_size, verbose=0)
-estimator.fit(X_train, y_train, epochs=epochs, validation_split=0.2)
-
+# estimator = KerasRegressor(
+#     build_fn=model, batch_size=batch_size, verbose=0)
+# estimator.fit(X_train, y_train, epochs=epochs, validation_split=0.2)
+model.fit(X_train, y_train, epochs=epochs,
+          validation_split=0.2, batch_size=batch_size)
 # Check accuracy
 test_loss, test_r2 = model.evaluate(X_val, y_val)
 print('\nModel loss: {}'.format(test_loss))
@@ -81,7 +88,7 @@ if not os.path.exists(MODEL_DIR):
     print('export_path = {}\n'.format(export_path))
 
     tf.saved_model.simple_save(
-        keras.backend.get_session(),
+        tf.backend.get_session(),
         export_path,
         inputs={'input_image': model.input},
         outputs={t.name: t for t in model.outputs})
