@@ -3,14 +3,15 @@ from tensorflow import keras
 from sklearn.model_selection import train_test_split
 import numpy as np
 import os
+from datetime import datetime
 import argparse
 import pickle
 import dask
 import dask.dataframe as dd
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 from tensorflow.keras import backend as K
+# from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 # from keras.layers import Dropout
 # from keras.optimizers import Adam
 # from keras.callbacks import EarlyStopping
@@ -68,18 +69,28 @@ epochs = int(os.getenv("EPOCHS", 300))
 batch_size = int(os.getenv("BATCH_SIZE", 500))
 
 #Compile and fit
-model.compile(loss=['mean_squared_error'], metrics=[
-              r2_keras], optimizer='Adam')
+model.compile(loss=['mean_squared_error'],
+              metrics=[r2_keras], optimizer='Adam')
 
 # estimator = KerasRegressor(
 #     build_fn=model, batch_size=batch_size, verbose=0)
 # estimator.fit(X_train, y_train, epochs=epochs, validation_split=0.2)
-model.fit(X_train, y_train, epochs=epochs,
-          validation_split=0.2, batch_size=batch_size)
+start_time = datetime.now()
+print('***** Started training at {} *****'.format(start_time))
+print('  Batch size = {}'.format(batch_size))
+model.fit(X_train, y_train,
+          epochs=epochs,
+          validation_split=0.2,
+          batch_size=batch_size)
+end_time = datetime.now()
+print('***** Finished training at {} *****'.format(end_time))
+print("  Training took time ", end_time - start_time)
+
 # Check accuracy
 test_loss, test_r2 = model.evaluate(X_val, y_val)
-print('\nModel loss: {}'.format(test_loss))
-print('\nModel r2: {}'.format(test_r2))
+print('--------------------------------------------------')
+print('Model loss: {}'.format(test_loss))
+print('Model r2: {}'.format(test_r2))
 
 # Save model
 if not os.path.exists(MODEL_DIR):
@@ -87,11 +98,7 @@ if not os.path.exists(MODEL_DIR):
     export_path = os.path.join(MODEL_DIR, VERSION)
     print('export_path = {}\n'.format(export_path))
 
-    tf.saved_model.simple_save(
-        tf.backend.get_session(),
-        export_path,
-        inputs={'input_image': model.input},
-        outputs={t.name: t for t in model.outputs})
+    tf.saved_model.save(model, export_path)
 
     print('\nModel saved to ' + MODEL_DIR)
 else:
