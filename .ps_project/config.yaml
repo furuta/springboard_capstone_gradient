@@ -17,7 +17,7 @@ worker:
   #   use: true
   #   path: "./docker/worker-Dockerfile" # Not necessary if it's "./Dockerfile"
   container: "tensorflow/tensorflow:latest-gpu-py3"
-  command: "nvidia-smi"
+  command: "pip install sklearn && pip install "dask[complete]" && python train/train_model.py -i /storage/airbnb/dask_data.pkl --modelPath /storage/model --version 1"
   machine-type: "P4000" #K80
   count: 1 #[required for multi-node]
 # parameter-server: #[required for multi-node]
