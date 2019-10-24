@@ -1,7 +1,7 @@
 version: 1
 
-project: "springboard_capstone_gradient"
-experiment: "springboard_capstone_gradient" #[optional, default:<repo name>]
+project: "prsfi0dk8"
+experiment: "furuta/springboard_capstone_gradient" #[optional, default:<repo name>]
 type: "single" #[single|multi-grpc|multi-mpi]
 ports: "5000" #[optional, default:5000]
 
