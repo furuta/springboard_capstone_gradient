@@ -11,7 +11,6 @@ import dask.dataframe as dd
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras import backend as K
-# from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 # from keras.layers import Dropout
 # from keras.optimizers import Adam
 # from keras.callbacks import EarlyStopping
@@ -91,16 +90,16 @@ print('Model loss: {}'.format(test_loss))
 print('Model r2: {}'.format(test_r2))
 
 # Save model
-if not os.path.exists(MODEL_DIR):
-    os.makedirs(MODEL_DIR)
-    export_path = os.path.join(MODEL_DIR, VERSION)
+os.makedirs(MODEL_DIR)
+export_path = os.path.join(MODEL_DIR, VERSION)
+if not os.path.exists(export_path):
     print('export_path = {}\n'.format(export_path))
 
     tf.saved_model.save(model, export_path)
 
-    print('\nModel saved to ' + MODEL_DIR)
+    print('\nModel saved to ' + export_path)
 else:
-    print('\nExisting model found at ' + MODEL_DIR)
+    print('\nExisting model found at ' + export_path)
     print('\nDid not overwrite old model. Run the job again with a different location to store the model')
 
 
