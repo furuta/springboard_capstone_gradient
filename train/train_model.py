@@ -16,8 +16,6 @@ from tensorflow.keras import backend as K
 # from keras.optimizers import Adam
 # from keras.callbacks import EarlyStopping
 
-# tf.logging.set_verbosity(tf.logging.ERROR)
-
 # Parse input parameters
 parser = argparse.ArgumentParser(description='Airbnb Listing Keras Model')
 parser.add_argument('--modelPath', type=str, dest='MODEL_DIR',
