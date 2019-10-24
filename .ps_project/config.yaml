@@ -1,0 +1,50 @@
+version: 1
+
+project: "springboard_capstone_gradient"
+experiment: "springboard_capstone_gradient" #[optional, default:<repo name>]
+type: "single" #[single|multi-grpc|multi-mpi]
+ports: "5000" #[optional, default:5000]
+
+paths:#[optional]
+  # workdir: "/path/to/workdir"
+  # artifacts: "/path/to/artifacts"
+model: #[optional, but required for model parsing and model deployments]
+  type: "Tensorflow" #[required for model, one of: Tensorflow|ONNX|Custom]
+  path: "/storage/model"
+
+worker:
+  # dockerfile:
+  #   use: true
+  #   path: "./docker/worker-Dockerfile" # Not necessary if it's "./Dockerfile"
+  container: "tensorflow/tensorflow:latest-gpu-py3"
+  command: "nvidia-smi"
+  machine-type: "P4000" #K80
+  count: 1 #[required for multi-node]
+# parameter-server: #[required for multi-node]
+#   container: "tensorflow/tensorflow:1.8.0-gpu"
+#   command: "nvidia-smi"
+#   machine-type: "K80"
+#   count: 1
+# filters:
+#   branches:
+#     ignore: irrelevant-branch
+#   tags:
+#     only:
+#       - v.*
+#       - latest
+
+# checks: #[optional]
+#   <identifier>: #i.e. tensorflow:loss:
+#     target: <range> #[required]
+#     aggregate: mean #[required]
+#     round: down #[optional, default: down, up|down]
+#     precision: 2 #[optional, default: 2]
+#     only-pulls: false #[optional, default: false]
+#     if-not-found: failure #[optional, default: "failure", success|failure]
+#     comment-on-pr: true #[optional, default: true]
+#   defaults:
+#     round: down #[optional, default: down, up|down]
+#     precision: 2 #[optional, default: 2]
+#     only-pulls: false #[optional, default: false]
+#     if-not-found: failure #[optional, default: "failure", success|failure]
+#     comment-on-pr: true #[optional, default: true]
