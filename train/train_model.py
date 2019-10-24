@@ -11,9 +11,6 @@ import dask.dataframe as dd
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras import backend as K
-# from keras.layers import Dropout
-# from keras.optimizers import Adam
-# from keras.callbacks import EarlyStopping
 
 # Parse input parameters
 parser = argparse.ArgumentParser(description='Airbnb Listing Keras Model')
@@ -101,21 +98,3 @@ if not os.path.exists(export_path):
 else:
     print('\nExisting model found at ' + export_path)
     print('\nDid not overwrite old model. Run the job again with a different location to store the model')
-
-
-# import numpy as np
-# # import pandas as pd
-# import pickle
-# import dask
-# import dask.dataframe as dd
-# # from pandas import Series,DataFrame
-# from keras.models import Sequential
-# from keras.layers import Dense
-# # from sklearn.metrics import r2_score
-# from sklearn.preprocessing import StandardScaler
-# # from sklearn.pipeline import Pipeline
-# # from livelossplot.keras import PlotLossesCallback
-# from keras import backend as K
-# from keras.layers import Dropout
-# from keras.optimizers import Adam
-# from keras.callbacks import EarlyStopping
