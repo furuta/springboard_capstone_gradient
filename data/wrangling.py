@@ -5,7 +5,7 @@ import dask.dataframe as dd
 import jpholiday
 import luigi
 import pickle
-import datetime
+from datetime import datetime
 import time
 import requests
 import json
@@ -53,7 +53,7 @@ class ModifyCalendarDataTask(luigi.Task):
             str(x).replace(',', '').replace('$', ''))), meta=('x', int))  # need to specify type
 
         # date
-        ddf_calendar['datetime'] = ddf_calendar['date'].map(lambda x: datetime.datetime.strptime(
+        ddf_calendar['datetime'] = ddf_calendar['date'].map(lambda x: datetime.strptime(
             str(x), '%Y-%m-%d'), meta=('x', object))  # need to specify type
         ddf_calendar['month'] = ddf_calendar['datetime'].map(
             lambda x: x.month, meta=('x', int))  # need to specify type
