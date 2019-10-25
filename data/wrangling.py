@@ -41,6 +41,7 @@ class ModifyCalendarDataTask(luigi.Task):
             'date',
             'price',
         ]
+        print(ddf_calendar.head())
         ddf_calendar = ddf_calendar.loc[:, use_columns_in_calendar]
         ddf_calendar = ddf_calendar.dropna()
 
@@ -111,6 +112,7 @@ class ModifyListingDataTask(luigi.Task):
             'beds',
             'cancellation_policy',
         ]
+        print(ddf_listing.head())
         ddf_listing = ddf_listing.loc[:, use_columns_in_listing]
 
         # property_type, room_type, cancellation_policy
