@@ -78,7 +78,7 @@ model.fit(X_train, y_train,
           epochs=epochs,
           validation_split=0.2,
           batch_size=batch_size)
-end_time = datetime.now()
+end_time = datetime.now()
 print('***** Finished training at {} *****'.format(end_time))
 print("  Training took time ", end_time - start_time)
 
