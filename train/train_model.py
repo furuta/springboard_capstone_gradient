@@ -49,14 +49,13 @@ y = ddf_airbnb['price_amount_log']
 X = ddf_airbnb.drop('price_amount_log', axis=1)
 X_train, X_val, y_train, y_val = train_test_split(
     X, y, train_size=0.8, test_size=0.2, random_state=1)
-
+inputs = len(X.columns)
 
 # Build model
 model = Sequential()
-model.add(Dense(91, input_dim=91, kernel_initializer='normal', activation='relu'))
-model.add(Dense(50, kernel_initializer='normal', activation='relu'))
-model.add(Dense(30, kernel_initializer='normal', activation='relu'))
-model.add(Dense(30, kernel_initializer='normal', activation='relu'))
+model.add(Dense(inputs, input_dim=inputs, kernel_initializer='normal', activation='relu'))
+model.add(Dense(100, kernel_initializer='normal', activation='relu'))
+model.add(Dense(60, kernel_initializer='normal', activation='relu'))
 model.add(Dense(30, kernel_initializer='normal', activation='relu'))
 model.add(Dense(1, kernel_initializer='normal'))
 model.summary()
@@ -79,8 +78,8 @@ model.fit(X_train, y_train,
           epochs=epochs,
           validation_split=0.2,
           batch_size=batch_size)
-end_time = datetime.now()
-print('***** Finished training at {} *****'.format(end_time))
+end_time = datetime.now()
+print('***** Finished training at {} *****'.format(end_time))
 print("  Training took time ", end_time - start_time)
 
 # Check accuracy
