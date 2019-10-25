@@ -81,8 +81,7 @@ class ModifyCalendarDataTask(luigi.Task):
 
         print("==========End ModifyCalendarDataTask==========")
         print("==============================================")
-        end_time = datetime.now()
-        print("Time ", end_time - start_time)
+        print("Time ", datetime.now() - start_time)
 
 
 class ModifyListingDataTask(luigi.Task):
@@ -139,8 +138,7 @@ class ModifyListingDataTask(luigi.Task):
 
         print("==========End ModifyListingDataTask==========")
         print("=============================================")
-        end_time = datetime.now()
-        print("Time ", end_time - start_time)
+        print("Time ", datetime.now() - start_time)
 
 
 class MargeNeighborhoodDataTask(luigi.Task):
@@ -222,8 +220,7 @@ class MargeNeighborhoodDataTask(luigi.Task):
 
         print("==========End MargeNeighborhoodDataTask==========")
         print("=================================================")
-        end_time = datetime.now()
-        print("Time ", end_time - start_time)
+        print("Time ", datetime.now() - start_time)
 
 
 class MargeAndPrepareDataTask(luigi.Task):
@@ -257,8 +254,7 @@ class MargeAndPrepareDataTask(luigi.Task):
 
         print("==========End MargeAndPrepareDataTask==========")
         print("===============================================")
-        end_time = datetime.now()
-        print("Time ", end_time - start_time)
+        print("Time ", datetime.now() - start_time)
 
 
 if __name__ == '__main__':
