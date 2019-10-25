@@ -33,17 +33,20 @@ class ModifyCalendarDataTask(luigi.Task):
         return luigi.LocalTarget(self.modified_calendar_filename)
 
     def run(self):
+        start_time = datetime.now()
         print("================================================")
         print("==========Start ModifyCalendarDataTask==========")
-        ddf_calendar = dd.read_csv(self.calendar_csv_filename)
+        dtype={'maximum_nights': 'float64', 'minimum_nights': 'float64'}
+        ddf_calendar = dd.read_csv(self.calendar_csv_filename, dtype=dtype)
+
         use_columns_in_calendar = [
             'listing_id',
             'date',
             'price',
         ]
-        print(ddf_calendar.head())
         ddf_calendar = ddf_calendar.loc[:, use_columns_in_calendar]
         ddf_calendar = ddf_calendar.dropna()
+        print(ddf_calendar.head())
 
         # price
         ddf_calendar['price_amount'] = ddf_calendar['price'].map(lambda x: int(float(
@@ -78,6 +81,8 @@ class ModifyCalendarDataTask(luigi.Task):
 
         print("==========End ModifyCalendarDataTask==========")
         print("==============================================")
+        end_time = datetime.now()
+        print("Time ", end_time - start_time)
 
 
 class ModifyListingDataTask(luigi.Task):
@@ -88,6 +93,7 @@ class ModifyListingDataTask(luigi.Task):
         return luigi.LocalTarget(self.modified_listings_filename)
 
     def run(self):
+        start_time = datetime.now()
         print("===============================================")
         print("==========Start ModifyListingDataTask==========")
         dtype = {'bedrooms': 'float32',
@@ -99,8 +105,8 @@ class ModifyListingDataTask(luigi.Task):
                  'review_scores_location': 'float32',
                  'review_scores_rating': 'float32',
                  'review_scores_value': 'float32'}
-
         ddf_listing = dd.read_csv(self.listings_csv_filename, dtype=dtype)
+
         use_columns_in_listing = [
             'id',
             'latitude',
@@ -112,8 +118,8 @@ class ModifyListingDataTask(luigi.Task):
             'beds',
             'cancellation_policy',
         ]
-        print(ddf_listing.head())
         ddf_listing = ddf_listing.loc[:, use_columns_in_listing]
+        print(ddf_listing.head())
 
         # property_type, room_type, cancellation_policy
         ddf_listing = ddf_listing.categorize(
@@ -133,6 +139,8 @@ class ModifyListingDataTask(luigi.Task):
 
         print("==========End ModifyListingDataTask==========")
         print("=============================================")
+        end_time = datetime.now()
+        print("Time ", end_time - start_time)
 
 
 class MargeNeighborhoodDataTask(luigi.Task):
@@ -149,6 +157,7 @@ class MargeNeighborhoodDataTask(luigi.Task):
         return luigi.LocalTarget(self.modified_listings_with_neighborhood_filename)
 
     def run(self):
+        start_time = datetime.now()
         print("===================================================")
         print("==========Start MargeNeighborhoodDataTask==========")
         # TODO:This should be managed with DB
@@ -213,6 +222,8 @@ class MargeNeighborhoodDataTask(luigi.Task):
 
         print("==========End MargeNeighborhoodDataTask==========")
         print("=================================================")
+        end_time = datetime.now()
+        print("Time ", end_time - start_time)
 
 
 class MargeAndPrepareDataTask(luigi.Task):
@@ -226,6 +237,7 @@ class MargeAndPrepareDataTask(luigi.Task):
         return luigi.LocalTarget(OUTPUT_FILE)
 
     def run(self):
+        start_time = datetime.now()
         print("=================================================")
         print("==========Start MargeAndPrepareDataTask==========")
         with open(self.modified_calendar_filename, 'rb') as f:
@@ -245,6 +257,8 @@ class MargeAndPrepareDataTask(luigi.Task):
 
         print("==========End MargeAndPrepareDataTask==========")
         print("===============================================")
+        end_time = datetime.now()
+        print("Time ", end_time - start_time)
 
 
 if __name__ == '__main__':
