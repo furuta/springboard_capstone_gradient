@@ -21,7 +21,7 @@ args = parser.parse_args()
 OUTPUT_FILE = args.output
 
 # Read the EPOCH value from environment variable
-API_KEY = os.getenv("API_KEY", 'AIzaSyBbRw_2eZ93PZkc1f4RdMcS1mopqHICkh8')
+API_KEY = os.getenv("API_KEY", '')
 RADIUS = os.getenv("RADIUS", '300')
 
 
