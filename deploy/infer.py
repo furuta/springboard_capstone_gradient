@@ -14,6 +14,7 @@ parser = ArgumentParser()
 parser.add_argument("-m", "--model", dest="model",
                     help="location of the model")
 model_file = parser.parse_args().model
+loaded_model = joblib.load(model_file)
 
 # Read the EPOCH value from environment variable
 API_KEY = os.getenv("API_KEY", '')
@@ -80,10 +81,10 @@ def predict():
     if cancellation_policy_column_name:
         df_inputs.loc[cancellation_policy_column_name] = 1
 
-    loaded_model = joblib.load(model_file)
     y = loaded_model.predict(df_inputs)
     print(y)
 
+    # Return prices each date as JSON
     return 'test'
 
 
