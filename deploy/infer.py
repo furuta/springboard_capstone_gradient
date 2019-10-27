@@ -1,25 +1,31 @@
+import tensorflow as tf
 from flask import Flask, jsonify, request
 import pandas as pd
 from sklearn.externals import joblib
 from argparse import ArgumentParser
 import requests
-from datetime import datetime as dt
-from datetime import timedelta
+from datetime import datetime
 import os
 import jpholiday
-import columns
+from columns import ModelColumns
+from schema import InputSchema
+import json
 
 # Parse input parameters
 parser = ArgumentParser()
 parser.add_argument("-m", "--model", dest="model",
                     help="location of the model")
 model_file = parser.parse_args().model
-loaded_model = joblib.load(model_file)
+# print(tf)
+# model = tf.saved_model.load(os.path.dirname(
+#     os.path.abspath(__file__)) + model_file)
 
 # Read the EPOCH value from environment variable
 API_KEY = os.getenv("API_KEY", '')
 RADIUS = os.getenv("RADIUS", '300')
 
+modelColumns = ModelColumns()
+inputSchema = InputSchema()
 app = Flask(__name__)
 
 
@@ -30,62 +36,60 @@ def index():
 
 @app.route('/price', methods=['GET'])
 def predict():
-    df_inputs = pd.DataFrame(columns=columns.input_columns)
-    df_inputs = df_inputs.fillna(0)
+    errors = inputSchema.validate(request.args)
+    if errors:
+        return jsonify(errors)
+    data, errors = inputSchema.dump(request.args)
 
-    fromDate = request.args.get('from')
-    toDate = request.args.get('to')
-    # Todo:replace / to -
-    fromdt = dt.strptime(fromDate, '%Y-%m-%d')
-    todt = dt.strptime(toDate, '%Y-%m-%d')
-    # Todo:From 2009
-    # Todo:Until 2029
-    days_num = (todt - fromdt).days + 1
-    # Todo:Up to 365
-    # for i in range(days_num):
-    # datelist.append(strdt + timedelta(days=i))
-    # tmp_se = pd.Series([i, i*i], index=list_df.columns)
-    # list_df = list_df.append(tmp_se, ignore_index=True)
+    inputs = {'month': [], 'day': [], 'day_of_week': [], 'holiday': []}
+    for dt in data['days_list']:
+        inputs['month'] += [dt.month]
+        inputs['day'] += [dt.day]
+        inputs['day_of_week'] += [dt.weekday()]
+        inputs['holiday'] += [jpholiday.is_holiday(dt.date())]
+        df_inputs = pd.DataFrame(inputs)
 
-    latitude = request.args.get('latitude')
-    longitude = request.args.get('longitude')
-    types = get_neighborhood_types(latitude, longitude)
-    for type in types:
-        # add 1 if exitst neighborhood_{type}
-        df_inputs.loc['neighborhood_' + type] += 1
+    print(df_inputs)
+    return 'test'
+    # df_inputs = df_inputs.categorize(
+    #     columns=['month', 'day_of_week', 'day'])  # need to categorize
+    # df_inputs = dd.get_dummies(
+    #     df_inputs, columns=['month', 'day_of_week', 'day'])
+    # df_inputs = pd.DataFrame(columns=modelColumns.get_input_columns())
+    # df_inputs = df_inputs.fillna(0)
 
-    accommodates = request.args.get('accommodates')
-    df_inputs.loc['accommodates'] = accommodates
-    bedrooms = request.args.get('bedrooms')
-    df_inputs.loc['bedrooms'] = bedrooms
-    beds = request.args.get('beds')
-    df_inputs.loc['beds'] = beds
+    types = get_neighborhood_types(data['latitude'], data['longitude'])
+    for t in types:
+        # add 1 if exitst neighborhood_{t}
+        df_inputs.loc['neighborhood_' + t] += 1
 
-    room_type = request.args.get('room_type')
-    # if (room_type_column_name := get_room_type_column_name(room_type)):# Python3.8~
-    room_type_column_name = columns.get_room_type_column_name(room_type)
+    df_inputs.loc['accommodates'] = data['accommodates']
+    df_inputs.loc['bedrooms'] = data['bedrooms']
+    df_inputs.loc['beds'] = data['beds']
+
+    # if (room_type_column_name := get_room_type_column_name(data['room_type'])):# Python3.8~
+    room_type_column_name = columns.get_room_type_column_name(
+        data['room_type'])
     if room_type_column_name:
         df_inputs.loc[room_type_column_name] = 1
 
-    property_type = request.args.get('property_type')
-    # if (property_type_column_name := get_property_type_column_name(property_type)):# Python3.8~
+    # if (property_type_column_name := get_property_type_column_name(data['property_type'])):# Python3.8~
     property_type_column_name = columns.get_property_type_column_name(
-        property_type)
+        data['property_type'])
     if property_type_column_name:
         df_inputs.loc[property_type_column_name] = 1
 
-    cancellation_policy = request.args.get('cancellation_policy')
-    # if (cancellation_policy_column_name := get_cancellation_policy_column_name(property_type)):# Python3.8~
+    # if (cancellation_policy_column_name := get_cancellation_policy_column_name(data['cancellation_policy'])):# Python3.8~
     cancellation_policy_column_name = columns.get_cancellation_policy_column_name(
-        cancellation_policy)
+        data['cancellation_policy'])
     if cancellation_policy_column_name:
         df_inputs.loc[cancellation_policy_column_name] = 1
 
-    y = loaded_model.predict(df_inputs)
+    y = model.predict(df_inputs)
     print(y)
 
     # Return prices each date as JSON
-    return 'test'
+    return jsonify(y)
 
 
 def get_neighborhood_types(latitude, longitude):
@@ -109,4 +113,4 @@ def get_neighborhood_types(latitude, longitude):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='localhost', port=8080)
