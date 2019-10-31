@@ -3,7 +3,6 @@ from flask import Flask, jsonify, request
 import pandas as pd
 import dask
 import dask.dataframe as dd
-from sklearn.externals import joblib
 from argparse import ArgumentParser
 import requests
 from datetime import datetime
