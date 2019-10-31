@@ -74,13 +74,19 @@ class InputSchema(Schema):
 
     @validates('latitude')
     def validate_latitude(self, value):
-        if value < - 90 or 90 < value:
-            raise ValidationError("latitude should be between -90 and 90.")
+        south = 35.5014
+        north = 35.8981
+        if value < south or north < value:
+            raise ValidationError(
+                "latitude should be between {} and {} because learned data was tokyo-to.".format(south, north))
 
     @validates('longitude')
     def validate_longitude(self, value):
-        if value < - 180 or 180 < value:
-            raise ValidationError("longitude should be between -180 and 180.")
+        west = 138.9257
+        east = 139.9156
+        if value < west or east < value:
+            raise ValidationError(
+                "longitude should be between {} and {} because learned data was tokyo-to.".format(west, east))
 
     @validates('accommodates')
     def validate_accommodates(self, value):
