@@ -44,7 +44,7 @@ def predict():
     errors = inputSchema.validate(request.args)
     if errors:
         return jsonify(errors)
-    data, errors = inputSchema.dump(request.args)
+    data = inputSchema.dump(request.args)
 
     inputs = {'month': [], 'day': [], 'day_of_week': [], 'holiday': []}
     for dt in data['days_list']:
