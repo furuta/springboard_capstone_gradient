@@ -128,7 +128,7 @@ class InputSchema(Schema):
                 "cancellation_policy should be between {} and {}. definition:{}".format(min_index, max_index, columns))
 
     @validates_schema(skip_on_field_errors=True)
-    def validate_data(self, data):
+    def validate_data(self, data, **kwargs):
         start = datetime.strptime(data['start'], '%Y-%m-%d')
         end = datetime.strptime(data['end'], '%Y-%m-%d')
         if start > end:
