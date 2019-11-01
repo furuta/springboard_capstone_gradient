@@ -90,7 +90,8 @@ print('Model loss: {}'.format(test_loss))
 print('Model r2: {}'.format(test_r2))
 
 # Save model
-os.makedirs(MODEL_DIR)
+if not os.path.exists(MODEL_DIR):
+    os.makedirs(MODEL_DIR)
 export_path = os.path.join(MODEL_DIR, VERSION)
 if not os.path.exists(export_path):
     print('export_path = {}\n'.format(export_path))

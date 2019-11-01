@@ -78,7 +78,7 @@ class InputSchema(Schema):
         north = 35.8981
         if value < south or north < value:
             raise ValidationError(
-                "latitude should be between {} and {} because learned data was tokyo-to.".format(south, north))
+                "latitude should be between {} and {} because learned data was Tokyo-to.".format(south, north))
 
     @validates('longitude')
     def validate_longitude(self, value):
@@ -86,25 +86,25 @@ class InputSchema(Schema):
         east = 139.9156
         if value < west or east < value:
             raise ValidationError(
-                "longitude should be between {} and {} because learned data was tokyo-to.".format(west, east))
+                "longitude should be between {} and {} because learned data was Tokyo-to.".format(west, east))
 
     @validates('accommodates')
     def validate_accommodates(self, value):
         if value < 0:
             raise ValidationError(
-                "accommodates should be positive value.")
+                "accommodates should be a positive value.")
 
     @validates('bedrooms')
     def validate_bedrooms(self, value):
         if value < 0:
             raise ValidationError(
-                "bedrooms should be positive value.")
+                "bedrooms should be a positive value.")
 
     @validates('beds')
     def validate_beds(self, value):
         if value < 0:
             raise ValidationError(
-                "beds should be positive value.")
+                "beds should be a positive value.")
 
     @validates('room_type')
     def validate_room_type(self, value):
