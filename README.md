@@ -38,3 +38,5 @@ gradient jobs create \
 --command "pip install flask jpholiday "dask[complete]" requests marshmallow && python deploy/infer.py -m /storage/airbnb/model/1 -d /storage/airbnb/dataset" \
 --workspaceUrl https://github.com/furuta/springboard_capstone_gradient
 ```
+
+*You can change the directories for data and model
