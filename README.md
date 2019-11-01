@@ -1,5 +1,3 @@
-# springboard_capstone_gradient
-
 # How to use
 ## For data wrangling
 ```
