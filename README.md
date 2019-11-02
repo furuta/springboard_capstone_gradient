@@ -1,5 +1,7 @@
 # How to deploy
+
 ## Data Wrangling
+
 ```
 gradient experiments run singlenode \
 --name airbnb_data \
@@ -13,6 +15,7 @@ gradient experiments run singlenode \
 ```
 
 ## Model Learning
+
 ```
 gradient experiments run singlenode \
 --name airbnb_model \
@@ -27,6 +30,7 @@ gradient experiments run singlenode \
 ```
 
 ## Deploy API
+
 ```
 gradient jobs create \
 --name deploy api \
@@ -39,25 +43,29 @@ gradient jobs create \
 --workspaceUrl https://github.com/furuta/springboard_capstone_gradient
 ```
 
-*You can change the directories for data and model
+\*You can change the directories for data and model
 
 # How to use API
+
 ### URL
+
 http://{URL that the job in gradient made}/price
 
 ### Query Paramater
-| key | type| required | detail |
-|:---|:---:|:---:|:---|
-|start |Date |YES |Set in YYYY-MM-DD format. This is the start date of the accommodation date for which you want to get a price. It must be in or after 2009. |
-|end |Date |YES |Set in YYYY-MM-DD format. This is the last day of the accommodation date for which you want to get a price. It must be in or before 2029. |
-|latitude |Float |YES |Set the latitude of the accommodation. It must be between 35.5014 and 35.8981 because learned data was Tokyo-to. |
-|longitude |Float |YES |Set the longitude of the accommodation. It must be between 138.9257 and 139.9156 because learned data was Tokyo-to. |
-|accommodates |Int |YES |Set the number of guests allowed. It must be a positive value. |
-|bedrooms |Int |YES |Set the number of bedrooms. It must be a positive value. |
-|beds |Int |YES |Set the number of beds. It must be a positive value. |
-|room_type |Int |YES |Set the room type numerically.<br>1: room_type_Private room<br>2: room_type_Entire home/apt<br>3:room_type_Shared room |
-|property_type |Int |YES |Set the accommodation type numerically.<br>1: property_type_Apartment<br>2: property_type_House<br>3: property_type_Serviced apartment<br>4: property_type_Condominium<br>5: property_type_Guest suite<br>6: property_type_Hut<br>7: property_type_Tiny house<br>8: property_type_Townhouse<br>9: property_type_Villa<br>10: property_type_Aparthotel<br>11: property_type_Cabin<br>12: property_type_Bed and breakfast<br>13: property_type_Loft<br>14: property_type_Hostel<br>15: property_type_Guesthouse<br>16: property_type_Boutique hotel<br>17: property_type_Nature lodge<br>18: property_type_Ryokan (Japan)<br>19: property_type_Tent<br>20: property_type_Hotel<br>21: property_type_Bungalow<br>22: property_type_Other<br>23: property_type_Camper/RV<br>24: property_type_Boat<br>25: property_type_Dome house<br>26: property_type_Dorm<br>27: property_type_Resort<br>28: property_type_Barn |
-|cancellation_policy |Int |YES |Set the cancellation policy numerically.<br>1: cancellation_policy_strict_14_with_grace_period<br>2: cancellation_policy_moderate<br>3: cancellation_policy_flexible<br>4: cancellation_policy_super_strict_30<br>5: cancellation_policy_super_strict_60<br>6: cancellation_policy_strict |
+
+| key                 | type  | required | detail                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| :------------------ | :---: | :------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| start               | Date  |   YES    | Set in YYYY-MM-DD format. This is the start date of the accommodation date for which you want to get a price. It must be in or after 2009.                                                                                                                                                                                                                                                                                                                                                             |
+| end                 | Date  |   YES    | Set in YYYY-MM-DD format. This is the last day of the accommodation date for which you want to get a price. It must be in or before 2029.                                                                                                                                                                                                                                                                                                                                                              |
+| latitude            | Float |   YES    | Set the latitude of the accommodation. It must be between 35.5014 and 35.8981 because learned data was Tokyo-to.                                                                                                                                                                                                                                                                                                                                                                                       |
+| longitude           | Float |   YES    | Set the longitude of the accommodation. It must be between 138.9257 and 139.9156 because learned data was Tokyo-to.                                                                                                                                                                                                                                                                                                                                                                                    |
+| accommodates        |  Int  |   YES    | Set the number of guests allowed. It must be a positive value.                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| bedrooms            |  Int  |   YES    | Set the number of bedrooms. It must be a positive value.                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| beds                |  Int  |   YES    | Set the number of beds. It must be a positive value.                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| room_type           |  Int  |   YES    | Set the room type numerically.<br>1: Private room<br>2: Entire home/apt<br>3:Shared room                                                                                                                                                                                                                                                                                                                                                                                                               |
+| property_type       |  Int  |   YES    | Set the accommodation type numerically.<br>1: Apartment<br>2: House<br>3: Serviced apartment<br>4: Condominium<br>5: Guest suite<br>6: Hut<br>7: Tiny house<br>8: Townhouse<br>9: Villa<br>10: Aparthotel<br>11: Cabin<br>12: Bed and breakfast<br>13: Loft<br>14: Hostel<br>15: Guesthouse<br>16: Boutique hotel<br>17: Nature lodge<br>18: Ryokan (Japan)<br>19: Tent<br>20: Hotel<br>21: Bungalow<br>22: Other<br>23: Camper/RV<br>24: Boat<br>25: Dome house<br>26: Dorm<br>27: Resort<br>28: Barn |
+| cancellation_policy |  Int  |   YES    | Set the cancellation policy numerically.<br>1: strict_14_with_grace_period<br>2: moderate<br>3: flexible<br>4: super_strict_30<br>5: super_strict_60<br>6: strict                                                                                                                                                                                                                                                                                                                                      |
 
 ### For Example
+
 http://{URL that the job in gradient made}/price?start=2019-12-20&end=2019-12-30&latitude=35.67152&longitude=139.71203&accommodates=2&bedrooms=1&beds=2&room_type=1&property_type=2&cancellation_policy=1
